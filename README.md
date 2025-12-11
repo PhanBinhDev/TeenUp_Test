@@ -283,6 +283,26 @@ After running seeds (`npm run seed:run`), you'll have:
 
 ## 🐛 Troubleshooting
 
+### Windows: docker-entrypoint.sh not found
+```bash
+# Lỗi: "/usr/local/bin/docker-entrypoint.sh: no such file or directory"
+# Nguyên nhân: File có line endings CRLF thay vì LF
+
+# Cách fix:
+# 1. Rebuild containers
+docker-compose -f docker-compose.dev.yml down
+docker-compose -f docker-compose.dev.yml up -d --build
+
+# 2. Hoặc chuyển line endings trước khi build
+# Dùng Git (khuyến nghị):
+git config --global core.autocrlf input
+git rm --cached -r .
+git reset --hard
+
+# Dùng dos2unix (nếu đã cài):
+dos2unix be/docker-entrypoint.sh
+```
+
 ### Database connection failed
 ```bash
 # Check if database is running

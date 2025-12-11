@@ -32,14 +32,15 @@ RUN apk add --no-cache openssl && \
   chown -R node:node secrets; \
   fi
 
-# Copy entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# Copy entrypoint script and ensure Unix line endings
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh && \
+  dos2unix /usr/local/bin/docker-entrypoint.sh 2>/dev/null || sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh
 
 # Use the node user from the image (instead of the root user)
 USER node
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["pnpm", "run", "start:dev"]
 
 #####################
@@ -92,9 +93,10 @@ RUN if [ ! -f /app/secrets/private.key ]; then \
   chown -R node:node /app/secrets; \
   fi
 
-# Copy entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# Copy entrypoint script and ensure Unix line endings
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh && \
+  sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh 2>/dev/null || true
 
 USER node
 
@@ -102,5 +104,5 @@ USER node
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:8000/api/health || exit 1
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["pm2-runtime", "start", "pm2.config.json"]
