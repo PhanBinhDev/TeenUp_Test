@@ -12,7 +12,7 @@ Hệ thống quản lý học sinh - phụ huynh - lớp học - điểm danh - 
 
 ```bash
 # Clone repository
-git clone <repository-url>
+git clone https://github.com/PhanBinhDev/TeenUp_Test
 cd TeenUp_Test
 
 # Chạy script tự động (khuyến nghị)
