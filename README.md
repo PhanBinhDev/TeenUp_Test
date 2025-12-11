@@ -10,23 +10,59 @@ Hệ thống quản lý học sinh - phụ huynh - lớp học - điểm danh - 
 
 ### Khởi động project
 
+**Linux/macOS:**
 ```bash
 # Clone repository
 git clone https://github.com/PhanBinhDev/TeenUp_Test
 cd TeenUp_Test
 
-# Chạy script tự động (khuyến nghị)
+# Chạy script tự động
 chmod +x setup.sh
 ./setup.sh
 ```
 
-Script sẽ tự động:
+**Windows (CMD/PowerShell):**
+```cmd
+# Clone repository
+git clone https://github.com/PhanBinhDev/TeenUp_Test
+cd TeenUp_Test
+
+# Chạy script tự động
+setup.bat
+```
+
+**Windows (Git Bash/WSL) - hoặc chạy thủ công:**
+```bash
+# Nếu các script trên không chạy được, chạy từng lệnh thủ công:
+
+# 1. Cài đặt dependencies
+cd be && pnpm install && cd ..
+cd fe && bun install && cd ..
+
+# 2. Copy env files
+cp be/.env.docker.example be/.env.docker
+cp be/.env.docker.example be/.env
+cp fe/.env.example fe/.env
+
+# 3. Start Docker containers
+docker-compose -f docker-compose.dev.yml up -d --build
+
+# 4. Đợi 30 giây để services khởi động, sau đó:
+docker exec teenup-backend-server pnpm migration:up
+docker exec teenup-backend-worker pnpm seed:run
+
+# 5. Start frontend
+cd fe
+bun run dev
+```
+
+Script tự động sẽ:
 1. Cài đặt dependencies (backend + frontend)
 2. Copy file môi trường (.env)
-3. Generate JWT keys
-4. Khởi động Docker containers
-5. Chạy migrations
-6. Seed dữ liệu mẫu
+3. Khởi động Docker containers
+4. Chạy migrations
+5. Seed dữ liệu mẫu
+6. Start frontend dev server
 
 ### Truy cập ứng dụng
 

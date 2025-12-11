@@ -89,6 +89,11 @@ echo "Starting frontend development server..."
 echo "Press Ctrl+C to stop"
 echo "=============================="
 echo ""
+echo "NOTE: If you're on Windows and this script fails, run these commands manually:"
+echo "  cd fe"
+echo "  bun install"
+echo "  bun run dev"
+echo ""
 
 # Start frontend in foreground
 cd fe
