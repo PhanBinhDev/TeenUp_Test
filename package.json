@@ -1,0 +1,38 @@
+{
+  "name": "teenup-lms",
+  "version": "1.0.0",
+  "description": "TeenUp Learning Management System - Full-stack Test",
+  "private": true,
+  "author": {
+    "name": "Binh Phan",
+    "email": "binhphan.dev@gmail.com"
+  },
+  "scripts": {
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up -d --build",
+    "docker:dev:down": "docker-compose -f docker-compose.dev.yml down",
+    "docker:dev:logs": "docker-compose -f docker-compose.dev.yml logs -f",
+    "docker:rebuild": "docker-compose -f docker-compose.dev.yml up -d --build server worker",
+    "docker:rebuild:all": "docker-compose -f docker-compose.dev.yml up -d --build",
+    "docker:logs:be": "docker-compose -f docker-compose.dev.yml logs -f server worker",
+    "docker:logs:fe": "docker-compose -f docker-compose.dev.yml logs -f frontend",
+    "docker:restart": "docker-compose -f docker-compose.dev.yml restart",
+    "docker:clean": "docker-compose -f docker-compose.dev.yml down -v && docker system prune -af",
+    "migration:up": "docker exec -it teenup-backend-server pnpm migration:up",
+    "migration:down": "docker exec -it teenup-backend-server pnpm migration:down",
+    "migration:generate": "docker exec teenup-backend-server pnpm typeorm migration:generate",
+    "seed:run": "docker exec -it teenup-backend-server pnpm seed:run",
+    "be:shell": "docker exec -it teenup-backend-server sh",
+    "fe:shell": "docker exec -it teenup-frontend sh",
+    "db:shell": "docker exec -it teenup-postgres psql -U postgres -d nestjs_api",
+    "setup": "cp be/.env.example be/.env && cp be/.env.docker.example be/.env.docker && echo 'Environment files created. Please update them with your values.'"
+  },
+  "keywords": [
+    "lms",
+    "learning-management-system",
+    "nestjs",
+    "nextjs",
+    "typescript",
+    "docker"
+  ],
+  "license": "MIT"
+}

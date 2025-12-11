@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+
+# Production builds
+dist/
+build/
+.next/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+be/.env
+be/.env.local
+be/.env.docker
+fe/.env
+fe/.env.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Docker volumes (keep structure)
+be/.docker/postgres_data/*
+!be/.docker/postgres_data/.gitkeep
+be/.docker/redis_data/*
+!be/.docker/redis_data/.gitkeep
+
+# Backend secrets
+be/secrets/*.key
+be/secrets/*.pem
+!be/secrets/.gitkeep

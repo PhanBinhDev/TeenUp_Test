@@ -1,0 +1,112 @@
+services:
+  # Backend Server
+  server:
+    build:
+      context: ./be
+      dockerfile: Dockerfile
+      target: development
+    container_name: teenup-backend-server
+    restart: unless-stopped
+    env_file:
+      - ./be/.env.docker
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./be:/app
+      - /app/node_modules
+      - ./be/secrets:/app/secrets
+    networks:
+      - teenup-network
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mail:
+        condition: service_started
+
+  # Backend Worker
+  worker:
+    build:
+      context: ./be
+      dockerfile: Dockerfile
+      target: development
+    container_name: teenup-backend-worker
+    restart: unless-stopped
+    env_file:
+      - ./be/.env.docker
+    environment:
+      - NODE_ENV=local
+      - IS_WORKER=true
+      - DATABASE_HOST=database
+      - DATABASE_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./be:/app
+      - /app/node_modules
+      - ./be/secrets:/app/secrets
+    networks:
+      - teenup-network
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # PostgreSQL Database
+  database:
+    image: postgres:16-alpine
+    container_name: teenup-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nestjs_api
+      TZ: UTC
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./be/.docker/postgres_data:/var/lib/postgresql/data
+    networks:
+      - teenup-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis
+  redis:
+    image: redis:7.0.1-alpine
+    container_name: teenup-redis
+    restart: unless-stopped
+    command: redis-server --requirepass redispass --save 120 1 --loglevel warning
+    ports:
+      - "16379:6379"
+    volumes:
+      - ./be/.docker/redis_data:/data
+    networks:
+      - teenup-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MailPit (Local SMTP)
+  mail:
+    image: axllent/mailpit:v1.25
+    container_name: teenup-mail
+    restart: unless-stopped
+    ports:
+      - "11025:1025" # SMTP
+      - "11080:8025" # Web UI
+    networks:
+      - teenup-network
+networks:
+  teenup-network:
+    name: teenup-network
+    driver: bridge
