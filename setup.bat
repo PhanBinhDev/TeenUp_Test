@@ -16,12 +16,36 @@ if errorlevel 1 (
 echo Docker is running
 echo.
 
+REM Check if pnpm is installed
+where pnpm >nul 2>&1
+if errorlevel 1 (
+    echo pnpm is not installed. Installing pnpm globally...
+    call npm install -g pnpm
+    if errorlevel 1 (
+        echo Failed to install pnpm. Please install Node.js first.
+        echo Visit: https://nodejs.org/
+        pause
+        exit /b 1
+    )
+    echo pnpm installed successfully
+    echo.
+)
+
+REM Check if bun is installed
+where bun >nul 2>&1
+if errorlevel 1 (
+    echo bun is not installed. Please install bun first:
+    echo Visit: https://bun.sh/
+    pause
+    exit /b 1
+)
+
 REM Install dependencies
 echo Installing backend dependencies...
 cd be
 call pnpm install
 if errorlevel 1 (
-    echo Failed to install backend dependencies. Make sure pnpm is installed.
+    echo Failed to install backend dependencies.
     pause
     exit /b 1
 )

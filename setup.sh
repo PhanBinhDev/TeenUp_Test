@@ -15,6 +15,22 @@ fi
 echo "Docker is running"
 echo ""
 
+# Check if pnpm is installed
+if ! command -v pnpm &> /dev/null; then
+  echo "pnpm is not installed. Installing pnpm..."
+  npm install -g pnpm
+  echo "pnpm installed successfully"
+  echo ""
+fi
+
+# Check if bun is installed
+if ! command -v bun &> /dev/null; then
+  echo "bun is not installed. Please install bun first:"
+  echo "Visit: https://bun.sh/"
+  echo "Or run: curl -fsSL https://bun.sh/install | bash"
+  exit 1
+fi
+
 # Install dependencies
 echo "Installing backend dependencies..."
 cd be && pnpm install && cd ..

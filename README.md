@@ -5,8 +5,19 @@ Hệ thống quản lý học sinh - phụ huynh - lớp học - điểm danh - 
 ## 🚀 Chạy nhanh (Quick Start)
 
 ### Yêu cầu
-- **Docker** + **Docker Compose**
-- Git
+- **Docker Desktop** (phải đang chạy)
+- **Git**
+- **Node.js** (v18+) - Script sẽ tự cài pnpm nếu chưa có
+- **Bun** - [Cài đặt Bun](https://bun.sh/)
+
+**Cài đặt nhanh:**
+```bash
+# Bun (Linux/macOS/WSL)
+curl -fsSL https://bun.sh/install | bash
+
+# Bun (Windows - qua PowerShell)
+powershell -c "irm bun.sh/install.ps1 | iex"
+```
 
 ### Khởi động project
 
